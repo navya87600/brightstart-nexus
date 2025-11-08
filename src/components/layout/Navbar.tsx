@@ -55,11 +55,12 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Auth Buttons */}
           <div className="hidden md:flex items-center gap-3">
             {isAuthenticated ? (
               <>
-                <span className="text-sm text-muted-foreground">Hi, {user?.name}</span>
+                <span className="text-sm text-muted-foreground">
+                  Hi, {user?.firstName}
+                </span>
                 <Button variant="outline" asChild>
                   <Link to="/auth">Logout</Link>
                 </Button>

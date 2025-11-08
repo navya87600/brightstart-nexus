@@ -3,6 +3,7 @@ import authReducer from './slices/authSlice';
 import appointmentReducer from './slices/appointmentSlice';
 import trainingReducer from './slices/trainingSlice';
 import childrenReducer from './slices/childrenSlice';
+import assessmentReducer from './slices/assessmentSlice';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     appointments: appointmentReducer,
     training: trainingReducer,
     children: childrenReducer,
+    assessment: assessmentReducer,
   },
 });
 

@@ -4,8 +4,10 @@ export type UserRole = 'parent' | 'therapist' | 'admin' | 'cdc-centre';
 
 interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  mobile: string;
   role: UserRole;
   avatar?: string;
 }

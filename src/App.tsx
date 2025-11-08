@@ -15,6 +15,8 @@ import TherapistDashboard from "./pages/TherapistDashboard";
 import CDCDashboard from "./pages/CDCDashboard";
 import Training from "./pages/Training";
 import Community from "./pages/Community";
+import Assessment from "./pages/Assessment";
+import AssessmentResult from "./pages/AssessmentResult";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +38,8 @@ const App = () => (
               <Route path="/cdc-dashboard" element={<CDCDashboard />} />
               <Route path="/training" element={<Training />} />
               <Route path="/community" element={<Community />} />
+              <Route path="/assessment" element={<Assessment />} />
+              <Route path="/assessment-result" element={<AssessmentResult />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

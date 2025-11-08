@@ -1,20 +1,23 @@
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { RootState } from '@/store/store';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Calendar, TrendingUp, BookOpen, Clock } from 'lucide-react';
+import { ClipboardList, TrendingUp, BookOpen, Calendar } from 'lucide-react';
 
 const ParentDashboard = () => {
+  const navigate = useNavigate();
   const { selectedChild } = useSelector((state: RootState) => state.children);
-  const { appointments } = useSelector((state: RootState) => state.appointments);
+  const { results } = useSelector((state: RootState) => state.assessment);
 
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Welcome Back!</h1>
-          <p className="text-muted-foreground">Here's how {selectedChild?.name} is doing</p>
+          <p className="text-muted-foreground">
+            Track {selectedChild?.name}'s developmental progress
+          </p>
         </div>
 
         {/* Child Info Card */}
@@ -24,27 +27,97 @@ const ParentDashboard = () => {
             <div>
               <h2 className="text-2xl font-bold">{selectedChild?.name}</h2>
               <p className="text-muted-foreground">Age: {selectedChild?.age} years</p>
-              <div className="flex gap-2 mt-2">
-                {selectedChild?.therapies.map((therapy) => (
-                  <span key={therapy} className="px-3 py-1 bg-card rounded-full text-xs">
-                    {therapy}
-                  </span>
-                ))}
-              </div>
             </div>
           </div>
         </Card>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        {/* Assessment Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <Card className="p-6">
+            <div className="flex items-start gap-4">
+              <div className="p-3 bg-primary/10 rounded-lg">
+                <ClipboardList className="h-6 w-6 text-primary" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-semibold mb-2">
+                  Developmental Assessment
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Take a quick assessment to track {selectedChild?.name}'s developmental
+                  milestones based on their age group.
+                </p>
+                <Button onClick={() => navigate('/assessment')} className="w-full">
+                  Start Assessment
+                </Button>
+              </div>
+            </div>
+          </Card>
+
+          {results.length > 0 && (
+            <Card className="p-6">
+              <div className="flex items-start gap-4">
+                <div className="p-3 bg-secondary/10 rounded-lg">
+                  <TrendingUp className="h-6 w-6 text-secondary" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-semibold mb-2">Latest Results</h3>
+                  <div className="space-y-2 mb-4">
+                    <div className="flex justify-between text-sm">
+                      <span>On Track:</span>
+                      <span className="font-medium text-green-600">
+                        {results[results.length - 1].greenCount}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Needs Observation:</span>
+                      <span className="font-medium text-yellow-600">
+                        {results[results.length - 1].yellowCount}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Concerns:</span>
+                      <span className="font-medium text-red-600">
+                        {results[results.length - 1].redCount}
+                      </span>
+                    </div>
+                  </div>
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate('/assessment-result')}
+                    className="w-full"
+                  >
+                    View Full Results
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          )}
+        </div>
+
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-accent/10 rounded-lg">
+                <BookOpen className="h-5 w-5 text-accent" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{results.length}</p>
+                <p className="text-xs text-muted-foreground">Assessments Completed</p>
+              </div>
+            </div>
+          </Card>
+
           <Card className="p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-lg">
                 <Calendar className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{appointments.length}</p>
-                <p className="text-xs text-muted-foreground">Upcoming Sessions</p>
+                <p className="text-2xl font-bold">
+                  {selectedChild?.therapies.length || 0}
+                </p>
+                <p className="text-xs text-muted-foreground">Active Therapies</p>
               </div>
             </div>
           </Card>
@@ -55,83 +128,9 @@ const ParentDashboard = () => {
                 <TrendingUp className="h-5 w-5 text-secondary" />
               </div>
               <div>
-                <p className="text-2xl font-bold">7/10</p>
-                <p className="text-xs text-muted-foreground">Milestones Reached</p>
+                <p className="text-2xl font-bold">{selectedChild?.age} yrs</p>
+                <p className="text-xs text-muted-foreground">Current Age</p>
               </div>
-            </div>
-          </Card>
-
-          <Card className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-accent/10 rounded-lg">
-                <BookOpen className="h-5 w-5 text-accent" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">3</p>
-                <p className="text-xs text-muted-foreground">Active Programs</p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-highlight/20 rounded-lg">
-                <Clock className="h-5 w-5 text-highlight-foreground" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">12h</p>
-                <p className="text-xs text-muted-foreground">This Month</p>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Milestones */}
-          <Card className="p-6">
-            <h3 className="text-xl font-semibold mb-4">Developmental Milestones</h3>
-            <div className="space-y-4">
-              {selectedChild?.milestones.map((milestone) => (
-                <div key={milestone.category}>
-                  <div className="flex justify-between mb-2">
-                    <span className="text-sm font-medium">{milestone.category}</span>
-                    <span className="text-sm text-muted-foreground">
-                      {milestone.completed}/{milestone.total}
-                    </span>
-                  </div>
-                  <Progress value={(milestone.completed / milestone.total) * 100} />
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          {/* Upcoming Appointments */}
-          <Card className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold">Upcoming Appointments</h3>
-              <Button size="sm">Book New</Button>
-            </div>
-            <div className="space-y-3">
-              {appointments.map((apt) => (
-                <div
-                  key={apt.id}
-                  className="p-4 bg-muted/30 rounded-lg border border-border hover:shadow-md transition-shadow"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <p className="font-medium">{apt.type}</p>
-                      <p className="text-sm text-muted-foreground">{apt.therapistName}</p>
-                    </div>
-                    <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
-                      {apt.status}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <span>📅 {new Date(apt.date).toLocaleDateString()}</span>
-                    <span>🕐 {apt.time}</span>
-                  </div>
-                </div>
-              ))}
             </div>
           </Card>
         </div>
